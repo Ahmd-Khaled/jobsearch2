@@ -35,6 +35,7 @@ export const generalField = {
     )
   ),
   confirmPassword: Joi.string().valid(Joi.ref("password")),
+  confirmNewPassword: Joi.string().valid(Joi.ref("newPassword")),
   email: Joi.string().email({
     minDomainSegments: 2,
     maxDomainSegments: 2,

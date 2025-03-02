@@ -7,6 +7,7 @@ import { rateLimit } from "express-rate-limit";
 import helmet from "helmet";
 import authRouter from "./Modules/Auth/auth.controller.js";
 import userRouter from "./Modules/User/user.controller.js";
+import companyRouter from "./Modules/Company/company.controller.js";
 import "./cron/otpCleanup.js";
 
 const limiter = rateLimit({
@@ -38,6 +39,7 @@ const bootstrap = async (app, express) => {
   // Routes------------------
   app.use("/auth", authRouter);
   app.use("/user", userRouter);
+  app.use("/company", companyRouter);
 
   app.all("*", notFoundHandler);
 

@@ -64,12 +64,6 @@ export const appsStatus = {
   rejected: "rejected",
 };
 
-export const defaultProfileImage = `uploads\\default-profile-picture.png`;
-export const defaultProfileImageCloud =
-  "https://res.cloudinary.com/dxaw2mt91/image/upload/v1738592847/wzjejohdj1ifdharh9gs.png";
-
-export const defaultProfileImagePublicIdCloud = "wzjejohdj1ifdharh9gs";
-
 // ---------------------------------------------------------------------
 export const OTP_EXPIRATION = 10 * 60 * 1000; // 10 minutes
 export const MAX_OTP_REQUESTS = 5; // 5 times to block OTP requests
@@ -84,3 +78,14 @@ export const subject = {
   regnerateOTP: "New OTP",
   updateEmail: "Update Email",
 };
+// ------------------------- Default Images----------------------------
+export const defaultProfilePic =
+  "https://res.cloudinary.com/dxaw2mt91/image/upload/v1738592847/wzjejohdj1ifdharh9gs.png";
+
+export const defaultProfilePicPublicId = "wzjejohdj1ifdharh9gs";
+
+export const defaultCoverPic =
+  "https://res.cloudinary.com/dxaw2mt91/image/upload/v1740944893/default_cover_image_pdyhnr.jpg";
+
+export const defaultCoverPicPublicId = "default_cover_image_pdyhnr";
+// ------------------------- Default Images----------------------------
