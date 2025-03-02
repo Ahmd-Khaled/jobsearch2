@@ -35,7 +35,7 @@ const bootstrap = async (app, express) => {
   app.use(cors()); // Enable CORS for all requests
 
   app.use(express.json()); // Body parsing
-
+  app.use(express.urlencoded({ extended: true })); // To parse form-data arrays
   // Routes------------------
   app.use("/auth", authRouter);
   app.use("/user", userRouter);

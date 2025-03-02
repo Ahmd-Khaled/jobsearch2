@@ -5,7 +5,7 @@ import { authentication } from "../../middlewares/auth.middleware.js";
 import { validation } from "../../middlewares/validation.middleware.js";
 import * as userValidation from "./user.validation.js";
 import { uploadCloud } from "../../utils/file_uploading/multerCloud.js";
-import { fileCheck } from "../../utils/fileCheck/fileCheck.js";
+import { imgTypeCheck } from "../../utils/fileCheck/imgTypeCheck.js";
 
 const router = Router();
 
@@ -45,7 +45,7 @@ router.patch(
   "/upload-profile-pic",
   authentication(),
   uploadCloud().single("profilePic"),
-  fileCheck, // File check and validation
+  imgTypeCheck, // File check and validation
   asyncHandler(userService.uploadProfilePic)
 );
 
@@ -54,7 +54,7 @@ router.patch(
   "/upload-cover-pic",
   authentication(),
   uploadCloud().single("coverPic"),
-  fileCheck, // File check and validation
+  imgTypeCheck, // File check and validation
   asyncHandler(userService.uploadCoverPic)
 );
 

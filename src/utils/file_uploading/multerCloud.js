@@ -12,13 +12,14 @@ export const uploadCloud = () => {
         "image/png",
         "image/jpg",
         "image/webp",
+        "application/pdf",
       ];
       if (allowedExtensions.includes(file.mimetype)) {
         cb(null, true);
       } else {
         cb(
           new Error(
-            "Invalid file type. Only JPEG, PNG, JPG, and WEBP are allowed."
+            "Invalid file type. Only JPEG, PNG, JPG, WEBP and PDF are allowed."
           ),
           false
         );

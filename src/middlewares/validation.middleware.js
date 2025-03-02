@@ -1,6 +1,11 @@
 import Joi from "joi";
 import { Types } from "mongoose";
-import { genderTypes, roleTypes, typesOfOTP } from "../utils/variables.js";
+import {
+  employeesRanges,
+  genderTypes,
+  roleTypes,
+  typesOfOTP,
+} from "../utils/variables.js";
 
 export const isValidObjectId = (value, helper) => {
   return Types.ObjectId.isValid(value) ? true : helper.message("Invalid Id");
@@ -8,6 +13,11 @@ export const isValidObjectId = (value, helper) => {
 
 export const generalField = {
   id: Joi.string().custom(isValidObjectId),
+  companyName: Joi.string().min(2).max(40),
+  description: Joi.string().min(10).max(1000),
+  text: Joi.string(),
+  employees: Joi.string().valid(...Object.values(employeesRanges)),
+  listOfIds: Joi.array().items(Joi.string().custom(isValidObjectId)),
   firstName: Joi.string().min(3).max(30),
   lastName: Joi.string().min(3).max(30),
   email: Joi.string().email({

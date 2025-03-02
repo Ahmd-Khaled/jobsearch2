@@ -1,4 +1,4 @@
-export const fileCheck = (req, res, next) => {
+export const imgTypeCheck = (req, res, next) => {
   // Check if file is provided
   if (!req.file) {
     return res.status(400).json({ message: "File is required" });
