@@ -8,6 +8,7 @@ import helmet from "helmet";
 import authRouter from "./Modules/Auth/auth.controller.js";
 import userRouter from "./Modules/User/user.controller.js";
 import companyRouter from "./Modules/Company/company.controller.js";
+import adminRouter from "./Modules/Admin/admin.controller.js";
 import "./cron/otpCleanup.js";
 
 const limiter = rateLimit({
@@ -40,6 +41,7 @@ const bootstrap = async (app, express) => {
   app.use("/auth", authRouter);
   app.use("/user", userRouter);
   app.use("/company", companyRouter);
+  app.use("/admin", adminRouter);
 
   app.all("*", notFoundHandler);
 
