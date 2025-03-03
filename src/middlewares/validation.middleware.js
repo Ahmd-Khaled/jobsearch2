@@ -3,8 +3,12 @@ import { Types } from "mongoose";
 import {
   employeesRanges,
   genderTypes,
+  jobDescriptionExample,
+  jobLocations,
   roleTypes,
+  seniorityLevels,
   typesOfOTP,
+  workingTimes,
 } from "../utils/variables.js";
 
 export const isValidObjectId = (value, helper) => {
@@ -66,6 +70,14 @@ export const generalField = {
     buffer: Joi.number(),
   },
   page: Joi.number(),
+  boolean: Joi.boolean(),
+  jobTitle: Joi.string().min(10).max(150),
+  jobLocation: Joi.string().valid(...Object.values(jobLocations)),
+  workingTime: Joi.string().valid(...Object.values(workingTimes)),
+  seniorityLevel: Joi.string().valid(...Object.values(seniorityLevels)),
+  jobDescription: Joi.string().min(10).max(2000).example(jobDescriptionExample),
+  technicalSkills: Joi.array(),
+  softSkills: Joi.array(),
 };
 
 export const validation = (schema) => {
