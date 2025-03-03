@@ -88,4 +88,9 @@ export const defaultCoverPic =
   "https://res.cloudinary.com/dxaw2mt91/image/upload/v1740944893/default_cover_image_pdyhnr.jpg";
 
 export const defaultCoverPicPublicId = "default_cover_image_pdyhnr";
+
+export const defaultLogo =
+  "https://res.cloudinary.com/dxaw2mt91/image/upload/v1740976971/default-logo_mffc8z.png";
+
+export const defaultLogoPublicId = "default-logo_mffc8z";
 // ------------------------- Default Images----------------------------

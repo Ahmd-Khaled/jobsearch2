@@ -65,6 +65,7 @@ export const generalField = {
     path: Joi.string().required(),
     buffer: Joi.number(),
   },
+  page: Joi.number(),
 };
 
 export const validation = (schema) => {

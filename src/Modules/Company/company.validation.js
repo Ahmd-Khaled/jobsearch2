@@ -22,3 +22,16 @@ export const updateCompanySchema = Joi.object({
   companyEmail: generalField.email,
   HRs: generalField.listOfIds,
 }).required();
+
+export const softDeleteCompanySchema = Joi.object({
+  companyId: generalField.id.required(),
+}).required();
+
+export const getCompanyByIdSchema = Joi.object({
+  companyId: generalField.id.required(),
+}).required();
+
+export const searchCompanyByNameSchema = Joi.object({
+  name: generalField.text.required(),
+  page: generalField.page.required(),
+}).required();

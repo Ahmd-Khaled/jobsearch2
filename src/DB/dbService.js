@@ -10,13 +10,15 @@ export const find = async ({
   populate = [],
   skip = 0,
   limit = 1000000000000000,
+  page = 1,
 }) => {
   const document = await model
     .find(filter)
     .select(select)
     .populate(populate)
     .skip(skip)
-    .limit(limit);
+    .limit(limit)
+    .paginate(page);
   return document;
 };
 // ----------------------------------------------------------------

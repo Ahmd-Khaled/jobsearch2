@@ -194,15 +194,22 @@ export const deleteCoverPic = async (req, res, next) => {
 export const softDeleteAccount = async (req, res, next) => {
   const userId = req.params.userId;
 
-  const user = await dbService.findByIdAndUpdate({
+  const user = await dbService.findById({
     model: UserModel,
     id: { _id: userId },
-    data: { deletedAt: now },
-    options: { new: true },
   });
   if (!user) {
     return res.status(404).json({ message: "User not found" });
   }
+
+  // Check if the user account is already soft deleted
+  if (user.deletedAt) {
+    return next(new Error("User account already soft deleted"));
+  }
+
+  user.deletedAt = now;
+  await user.save();
+
   res.status(200).json({
     status: true,
     message: "User account soft deleted successfully",
