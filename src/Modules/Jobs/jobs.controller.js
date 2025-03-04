@@ -5,6 +5,8 @@ import { validation } from "../../middlewares/validation.middleware.js";
 import { asyncHandler } from "../../utils/error_handling/asyncHandler.js";
 import { allowTo, authentication } from "../../middlewares/auth.middleware.js";
 import { roleTypes } from "../../utils/variables.js";
+import { pdfCheck } from "../../utils/fileCheck/pdfCheck.js";
+import { uploadCloud } from "../../utils/file_uploading/multerCloud.js";
 
 const router = Router({ mergeParams: true });
 
@@ -41,5 +43,32 @@ router.get(
   validation(jobsValidation.getJobsForCompanySchema),
   asyncHandler(jobsService.getJobsForCompany)
 );
+
+// Get all Jobs with filters without Merge Param API
+router.get(
+  "/all",
+  authentication(),
+  validation(jobsValidation.getAllJobsSchema),
+  asyncHandler(jobsService.getAllJobs)
+);
+
+// Apply to Job (Job application)  API
+router.post(
+  "/:jobId/apply ",
+  authentication(),
+  allowTo([roleTypes.User]),
+  uploadCloud().single("userCV"),
+  pdfCheck, // PDF check for CV
+  validation(jobsValidation.applyToJobSchema),
+  asyncHandler(jobsService.applyToJob)
+);
+
+// Get all applications for specific Job API
+// router.get(
+//   "/applications ",
+//   authentication(),
+//   validation(jobsValidation.getAllApplicationsSchema),
+//   asyncHandler(jobsService.getAllApplications)
+// );
 
 export default router;

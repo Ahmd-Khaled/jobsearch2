@@ -35,22 +35,26 @@ const jobSchema = new Schema(
     updatedBy: { type: Types.ObjectId, ref: "User" },
     closed: { type: Boolean, default: false },
     companyId: { type: Types.ObjectId, ref: "Company" },
+    // applicants: [{ type: Types.ObjectId }],
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
 
 // Apply pagination
-jobSchema.query.paginate = async function (page, limit) {
+jobSchema.query.paginate = async function (page, limit, filter = {}) {
   // Pagination logic
   page = page ? Number(page) : 1;
   limit = limit ? Number(limit) : 10;
 
   const skip = limit * (page - 1);
 
+  console.log("-----------------------filter---------:", filter);
+
   // this here (as a query) equal to = await PostModel.find()
   const data = await this.skip(skip).limit(limit);
+
   // countDocoment work only in the Model but this here act as a query so we will use this.model
-  const items = await this.model.countDocuments();
+  const items = await this.model.countDocuments(filter);
   const totalPages = Math.ceil(items / limit);
   return {
     data,

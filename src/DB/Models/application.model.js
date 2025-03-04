@@ -1,5 +1,5 @@
 import mongoose, { Schema, Types, model } from "mongoose";
-import { appsStatus } from "../../utils/variables";
+import { appsStatus } from "../../utils/variables.js";
 
 const applicationSchema = new Schema(
   {

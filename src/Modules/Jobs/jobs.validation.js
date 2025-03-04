@@ -32,9 +32,26 @@ export const deleteJobSchema = Joi.object({
 
 export const getJobsForCompanySchema = Joi.object({
   companyId: generalField.id.required(),
-  jobId: generalField.id,
+  jobTitle: generalField.text,
   page: generalField.page,
   limit: generalField.number,
   search: generalField.text,
   sort: generalField.text,
+}).required();
+
+export const getAllJobsSchema = Joi.object({
+  workingTime: generalField.workingTime,
+  jobLocation: generalField.jobLocation,
+  seniorityLevel: generalField.seniorityLevel,
+  jobTitle: generalField.text,
+  technicalSkills: generalField.text,
+  page: generalField.page,
+  limit: generalField.number,
+  search: generalField.text,
+  sort: generalField.text,
+});
+
+export const applyToJobSchema = Joi.object({
+  jobId: generalField.id.required(),
+  file: Joi.object(generalField.fileObject),
 }).required();

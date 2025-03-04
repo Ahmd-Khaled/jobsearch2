@@ -20,7 +20,7 @@ export const find = async ({
     .skip(skip)
     .limit(limit)
     .sort(sort)
-    .paginate(page, limit);
+    .paginate(page, limit, filter);
   return document;
 };
 // ----------------------------------------------------------------
