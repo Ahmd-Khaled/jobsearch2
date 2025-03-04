@@ -8,8 +8,12 @@ import { uploadCloud } from "../../utils/file_uploading/multerCloud.js";
 import { imgOrPdfCheck } from "../../utils/fileCheck/imgOrPdfCheck.js";
 import { roleTypes } from "../../utils/variables.js";
 import { imgTypeCheck } from "../../utils/fileCheck/imgTypeCheck.js";
+import jobsRouter from "../../Modules/Jobs/jobs.controller.js";
 
 const router = Router();
+
+// Merge Params
+router.use("/:companyId/jobs", jobsRouter);
 
 // Add Company API
 router.post(

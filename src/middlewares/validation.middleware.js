@@ -70,6 +70,7 @@ export const generalField = {
     buffer: Joi.number(),
   },
   page: Joi.number(),
+  number: Joi.number(),
   boolean: Joi.boolean(),
   jobTitle: Joi.string().min(10).max(150),
   jobLocation: Joi.string().valid(...Object.values(jobLocations)),

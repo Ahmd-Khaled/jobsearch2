@@ -58,7 +58,7 @@ companySchema.query.paginate = async function (page) {
   // this here (as a query) equal to = await PostModel.find()
   const data = await this.skip(skip).limit(limit);
   // countDocoment work only in the Model but this here act as a query so we will use this.model
-  const items = await this.model.countDocuments({ isDeleted: false });
+  const items = await this.model.countDocuments();
   const totalPages = Math.ceil(items / limit);
   return {
     data,

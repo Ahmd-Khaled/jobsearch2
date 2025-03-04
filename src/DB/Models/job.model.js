@@ -36,7 +36,32 @@ const jobSchema = new Schema(
     closed: { type: Boolean, default: false },
     companyId: { type: Types.ObjectId, ref: "Company" },
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
+
+// Apply pagination
+jobSchema.query.paginate = async function (page, limit) {
+  // Pagination logic
+  page = page ? Number(page) : 1;
+  limit = limit ? Number(limit) : 10;
+
+  const skip = limit * (page - 1);
+
+  // this here (as a query) equal to = await PostModel.find()
+  const data = await this.skip(skip).limit(limit);
+  // countDocoment work only in the Model but this here act as a query so we will use this.model
+  const items = await this.model.countDocuments();
+  const totalPages = Math.ceil(items / limit);
+  return {
+    data,
+    totalItems: items,
+    currentPage: page,
+    totalPages,
+    itemsPerPage: data.length,
+    nextPage: page < totalPages ? page + 1 : "",
+    previousPage: page > 1 ? page - 1 : "",
+    lastPage: totalPages,
+  };
+};
 
 export const JobModel = mongoose.model.Job || model("Job", jobSchema);

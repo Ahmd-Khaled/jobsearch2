@@ -10,6 +10,7 @@ export const find = async ({
   populate = [],
   skip = 0,
   limit = 1000000000000000,
+  sort = "-createdAt", // Default Sorting by Newest First
   page = 1,
 }) => {
   const document = await model
@@ -18,7 +19,25 @@ export const find = async ({
     .populate(populate)
     .skip(skip)
     .limit(limit)
-    .paginate(page);
+    .sort(sort)
+    .paginate(page, limit);
+  return document;
+};
+// ----------------------------------------------------------------
+export const findWithoutPaginate = async ({
+  model,
+  filter = {},
+  select = "",
+  populate = [],
+  skip = 0,
+  limit = 1000000000000000,
+}) => {
+  const document = await model
+    .find(filter)
+    .select(select)
+    .populate(populate)
+    .skip(skip)
+    .limit(limit);
   return document;
 };
 // ----------------------------------------------------------------

@@ -157,6 +157,11 @@ export const getCompanyById = async (req, res, next) => {
   const company = await dbService.findOne({
     model: CompanyModel,
     filter: { _id: companyId },
+    populate: [
+      {
+        path: "jobs",
+      },
+    ],
   });
   if (!company) {
     return next(new Error("Company not found"));
@@ -183,7 +188,7 @@ export const searchCompanyByName = async (req, res, next) => {
     ],
   });
 
-  if (!searchResults || searchResults.data.length === 0) {
+  if (!searchResults || searchResults.data?.length === 0) {
     return next(new Error("Company not found"));
   }
   return res.status(200).json({
