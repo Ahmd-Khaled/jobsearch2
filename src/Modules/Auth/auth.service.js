@@ -12,6 +12,7 @@ import {
   roleTypes,
   typesOfOTP,
 } from "../../utils/variables.js";
+
 // Register
 export const signup = async (req, res, next) => {
   const {

@@ -54,7 +54,7 @@ router.get(
 
 // Apply to Job (Job application)  API
 router.post(
-  "/:jobId/apply ",
+  "/:jobId/apply",
   authentication(),
   allowTo([roleTypes.User]),
   uploadCloud().single("userCV"),
@@ -64,11 +64,19 @@ router.post(
 );
 
 // Get all applications for specific Job API
-// router.get(
-//   "/applications ",
-//   authentication(),
-//   validation(jobsValidation.getAllApplicationsSchema),
-//   asyncHandler(jobsService.getAllApplications)
-// );
+router.get(
+  "/:jobId/applications",
+  authentication(),
+  validation(jobsValidation.getAllJobApplicationsSchema),
+  asyncHandler(jobsService.getAllJobApplications)
+);
+
+// Accept or Reject an Applicant (Change its status) API
+router.patch(
+  "/applications/:applicationId",
+  authentication(),
+  validation(jobsValidation.changeApplicationStatusSchema),
+  asyncHandler(jobsService.changeApplicationStatus)
+);
 
 export default router;

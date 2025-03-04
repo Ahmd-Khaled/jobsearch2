@@ -2,9 +2,10 @@ import { EventEmitter } from "events";
 import { UserModel } from "../../DB/Models/user.model.js";
 import { generateOTPFn } from "../otp/generateOTPFn.js";
 import * as dbService from "../../DB/dbService.js";
-import { subject, typesOfOTP } from "../variables.js";
+import { appsStatus, subject, typesOfOTP } from "../variables.js";
 import templateEmail from "./templateEmail.js";
 import sendEmail from "./sendEmail.js";
+import { jobApplicationMail } from "./jobApplicationMail.js";
 
 export const emailEmitter = new EventEmitter();
 
@@ -18,6 +19,17 @@ emailEmitter.on("forgetPasswordEvent", async (email, userName, id, OTPList) => {
   await sendCode({
     data: { email, userName, id, OTPList },
     subjectType: subject.forgotPassword,
+  });
+});
+
+emailEmitter.on("changeStatus", async (email, username, status, jobTitle) => {
+  const isSent = await sendEmail({
+    to: email,
+    subject:
+      status === appsStatus.accepted
+        ? subject.applicationAccepted
+        : subject.applicationRejected,
+    html: jobApplicationMail(email, username, status, jobTitle),
   });
 });
 

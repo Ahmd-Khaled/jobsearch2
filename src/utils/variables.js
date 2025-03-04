@@ -77,6 +77,8 @@ export const subject = {
   changePassword: "Password Changed Successfully",
   regnerateOTP: "New OTP",
   updateEmail: "Update Email",
+  applicationAccepted: "Application Accepted",
+  applicationRejected: "Application Rejected",
 };
 // ------------------------- Default Images----------------------------
 export const defaultProfilePic =

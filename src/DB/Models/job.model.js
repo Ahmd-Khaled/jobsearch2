@@ -48,7 +48,7 @@ jobSchema.query.paginate = async function (page, limit, filter = {}) {
 
   const skip = limit * (page - 1);
 
-  console.log("-----------------------filter---------:", filter);
+  // console.log("-----------------------filter---------:", filter);
 
   // this here (as a query) equal to = await PostModel.find()
   const data = await this.skip(skip).limit(limit);

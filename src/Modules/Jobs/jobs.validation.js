@@ -55,3 +55,15 @@ export const applyToJobSchema = Joi.object({
   jobId: generalField.id.required(),
   file: Joi.object(generalField.fileObject),
 }).required();
+
+export const getAllJobApplicationsSchema = Joi.object({
+  jobId: generalField.id.required(),
+  page: generalField.page,
+  limit: generalField.number,
+  sort: generalField.text,
+}).required();
+
+export const changeApplicationStatusSchema = Joi.object({
+  applicationId: generalField.id.required(),
+  status: generalField.status.required(),
+}).required();

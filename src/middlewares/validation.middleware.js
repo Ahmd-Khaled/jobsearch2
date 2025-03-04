@@ -1,6 +1,7 @@
 import Joi from "joi";
 import { Types } from "mongoose";
 import {
+  appsStatus,
   employeesRanges,
   genderTypes,
   jobDescriptionExample,
@@ -79,6 +80,7 @@ export const generalField = {
   jobDescription: Joi.string().min(10).max(2000).example(jobDescriptionExample),
   technicalSkills: Joi.array(),
   softSkills: Joi.array(),
+  status: Joi.string().valid(...Object.values(appsStatus)),
 };
 
 export const validation = (schema) => {

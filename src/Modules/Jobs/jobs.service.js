@@ -2,7 +2,9 @@ import * as dbService from "../../DB/dbService.js";
 import { ApplicationModel } from "../../DB/Models/application.model.js";
 import { CompanyModel } from "../../DB/Models/company.model.js";
 import { JobModel } from "../../DB/Models/job.model.js";
+import { emailEmitter } from "../../utils/emails/email.events.js";
 import cloudinary from "../../utils/file_uploading/cloudinaryConfig.js";
+import { appsStatus } from "../../utils/variables.js";
 
 // Add Job
 export const addJob = async (req, res, next) => {
@@ -309,9 +311,13 @@ export const applyToJob = async (req, res, next) => {
   const { public_id, secure_url } = await cloudinary.uploader.upload(
     req.file.path,
     {
+      resource_type: "raw", // Important for PDF or any non-image file
       folder: `Companies/${company?.companyEmail}/Jobs/${jobId}/CVs`,
+      public_id: `${req.user._id}.pdf`, //  Add the filename + extension
     }
   );
+
+  //  Emit a socket event to notify the HR that a new application has been submitted
 
   //  Create a new job application
   const newApplication = await dbService.create({
@@ -327,5 +333,134 @@ export const applyToJob = async (req, res, next) => {
     status: true,
     message: "Application submitted successfully",
     data: newApplication,
+  });
+};
+
+// Get all applications for specific Job.
+export const getAllJobApplications = async (req, res, next) => {
+  const jobId = req.params.jobId;
+  let { page, limit, sort } = req.query;
+
+  const job = await dbService.findById({
+    model: JobModel,
+    id: jobId,
+  });
+
+  if (!job) {
+    return next(new Error("Job not found"));
+  }
+
+  //   Get Comapny related to the Job to get its HRs
+  const company = await dbService.findById({
+    model: CompanyModel,
+    id: job.companyId,
+  });
+
+  if (!company) {
+    return next(new Error("Company not found"));
+  }
+
+  //   Ensure that each company Owner or company hr can take a look at the applications
+  if (
+    !company.HRs.some((hr) => hr.toString() === req.user._id.toString()) &&
+    job.addedBy.toString() !== req.user._id.toString()
+  ) {
+    return next(
+      new Error(
+        "Unauthorized to view job applications (only company Owner or company HRs can view the job applications)"
+      )
+    );
+  }
+  //   Get all applications related to the job
+  const applications = await dbService.find({
+    model: ApplicationModel,
+    filter: { jobId },
+    limit,
+    page,
+    sort,
+    populate: {
+      path: "userId",
+      select:
+        "-OTP -provider -password -role -isConfirmed -changeCredentialTime",
+    },
+  });
+
+  if (!applications || applications.data?.length === 0) {
+    return next(new Error("No applications found for this job"), {
+      cause: 401,
+    });
+  }
+  return res.status(200).json({
+    status: true,
+    message: "Applications fetched successfully",
+    ...applications,
+  });
+};
+
+// Change Application Status (accepted, viewed, in consideration, rejected)
+export const changeApplicationStatus = async (req, res, next) => {
+  const applicationId = req.params.applicationId;
+  const { status } = req.body;
+
+  const application = await dbService.findById({
+    model: ApplicationModel,
+    id: applicationId,
+    populate: {
+      path: "jobId",
+      populate: {
+        path: "companyId", // Nested Populate, This will populate company from the populated job
+      },
+    },
+  });
+
+  if (!application) {
+    return next(new Error("Application not found"));
+  }
+
+  //   console.log("-----------------------application:", application);
+
+  //   Ensure that each company Owner or company hr can change the application status
+  if (
+    !application.jobId.companyId.HRs.some(
+      (hr) => hr.toString() === req.user._id.toString()
+    ) &&
+    application.jobId.addedBy.toString() === req.user._id.toString()
+  ) {
+    return next(
+      new Error(
+        "Unauthorized to change application status (only company Owner or company HRs can change the status)"
+      )
+    );
+  }
+
+  //   If the application is accepted, send an acceptance email to the applicant.
+  if (status === appsStatus.accepted) {
+    // Send acceptance email to applicant
+    emailEmitter.emit(
+      "changeStatus",
+      req.user.email,
+      `${req.user.firstName} ${req.user.lastName}`,
+      status,
+      application.jobId.jobTitle
+    );
+  }
+
+  //   If the application is rejected, send an rejection email to the applicant
+  if (status === appsStatus.rejected) {
+    // Send rejection  email to applicant
+    emailEmitter.emit(
+      "changeStatus",
+      req.user.email,
+      `${req.user.firstName} ${req.user.lastName}`,
+      status,
+      application.jobId.jobTitle
+    );
+  }
+
+  application.status = status;
+  await application.save();
+  return res.status(200).json({
+    status: true,
+    message: `Application status updated successfully (${status})`,
   });
 };
