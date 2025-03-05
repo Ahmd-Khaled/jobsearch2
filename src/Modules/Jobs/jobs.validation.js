@@ -32,7 +32,7 @@ export const deleteJobSchema = Joi.object({
 
 export const getJobsForCompanySchema = Joi.object({
   companyId: generalField.id.required(),
-  jobTitle: generalField.text,
+  jobId: generalField.id,
   page: generalField.page,
   limit: generalField.number,
   search: generalField.text,

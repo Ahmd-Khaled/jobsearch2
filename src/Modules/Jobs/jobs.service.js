@@ -87,7 +87,7 @@ export const updateJob = async (req, res, next) => {
     return next(new Error("Job not found"));
   }
 
-  //   ensure that only the owner can update the job
+  //   ensure that only the job owner can update the job
   if (job.addedBy.toString() !== req.user._id.toString()) {
     return next(
       new Error(
@@ -156,10 +156,10 @@ export const deleteJob = async (req, res, next) => {
   });
 };
 
-// Get All Jobs Related To Comapny
+// Get All Jobs Related To Comapny or Specific Job
 export const getJobsForCompany = async (req, res, next) => {
   const companyId = req.params.companyId;
-  let { page, limit, search, sort, jobTitle } = req.query;
+  let { page, limit, search, sort, jobId } = req.query;
 
   let query = { company: companyId };
 
@@ -177,13 +177,13 @@ export const getJobsForCompany = async (req, res, next) => {
     }
   }
 
-  //   If User search for specific job title for specific company
-  if (jobTitle) {
+  //   If User search for specific job by jobId for specific company
+  if (jobId) {
     const jobs = await dbService.find({
       model: JobModel,
       filter: {
         companyId: query.company,
-        jobTitle: { $regex: jobTitle, $options: "i" },
+        _id: jobId,
       },
     });
     if (!jobs) {
@@ -434,20 +434,9 @@ export const changeApplicationStatus = async (req, res, next) => {
   }
 
   //   If the application is accepted, send an acceptance email to the applicant.
-  if (status === appsStatus.accepted) {
-    // Send acceptance email to applicant
-    emailEmitter.emit(
-      "changeStatus",
-      req.user.email,
-      `${req.user.firstName} ${req.user.lastName}`,
-      status,
-      application.jobId.jobTitle
-    );
-  }
-
   //   If the application is rejected, send an rejection email to the applicant
-  if (status === appsStatus.rejected) {
-    // Send rejection  email to applicant
+  if (status === appsStatus.accepted || status === appsStatus.rejected) {
+    // Send acceptance | rejection email to applicant
     emailEmitter.emit(
       "changeStatus",
       req.user.email,

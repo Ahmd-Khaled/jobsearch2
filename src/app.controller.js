@@ -10,6 +10,7 @@ import userRouter from "./Modules/User/user.controller.js";
 import companyRouter from "./Modules/Company/company.controller.js";
 import adminRouter from "./Modules/Admin/admin.controller.js";
 import jobsRouter from "./Modules/Jobs/jobs.controller.js";
+import chatRouter from "./Modules/Chat/chat.controller.js";
 
 // Cron job to delete expired OTPs
 import "./cron/otpCleanup.js";
@@ -46,6 +47,7 @@ const bootstrap = async (app, express) => {
   app.use("/company", companyRouter);
   app.use("/admin", adminRouter);
   app.use("/jobs", jobsRouter);
+  app.use("/chat", chatRouter);
 
   app.all("*", notFoundHandler);
 
