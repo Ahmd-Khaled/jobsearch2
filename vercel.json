@@ -9,5 +9,5 @@
     "env": {
         "DB_URI": "mongodb+srv://ahmdkhaldd:7udsvprWZsJVrsM5@cluster0.cwq9q.mongodb.net/jobSearch"
     },
-    "installCommand": "npm install --legacy-peer-deps"
+    "installCommand": "npm install --force"
 }
