@@ -8,10 +8,5 @@
     ],
     "env": {
         "DB_URI": "mongodb+srv://ahmdkhaldd:7udsvprWZsJVrsM5@cluster0.cwq9q.mongodb.net/jobSearch"
-    },
-    "functions": {
-        "src/index.js": {
-            "includeFiles": "src/config/.env"
-        }
     }
 }
