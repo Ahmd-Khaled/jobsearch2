@@ -7,7 +7,7 @@ const port = process.env.PORT || 3030;
 await bootstrap(app, express);
 
 const server = app.listen(port, () =>
-  console.log(`SocialMediaapp listening on port ${port}!`)
+  console.log(`JobSearch listening on port ${port}!`)
 );
 
 initializeSocket(server, app);
