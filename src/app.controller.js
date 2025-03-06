@@ -42,6 +42,9 @@ const bootstrap = async (app, express) => {
   app.use(express.json()); // Body parsing
   app.use(express.urlencoded({ extended: true })); // To parse form-data arrays
   // Routes------------------
+  app.get("/", (req, res) => {
+    res.json({ message: "API is working - Vercel Test" });
+  });
   app.use("/auth", authRouter);
   app.use("/user", userRouter);
   app.use("/company", companyRouter);
