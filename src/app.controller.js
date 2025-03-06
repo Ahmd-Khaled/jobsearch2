@@ -11,6 +11,7 @@ import companyRouter from "./Modules/Company/company.controller.js";
 import adminRouter from "./Modules/Admin/admin.controller.js";
 import jobsRouter from "./Modules/Jobs/jobs.controller.js";
 import chatRouter from "./Modules/Chat/chat.controller.js";
+import applicationsRouter from "./Modules/Applications/applications.controller.js";
 
 // Cron job to delete expired OTPs
 import "./cron/otpCleanup.js";
@@ -36,7 +37,6 @@ const bootstrap = async (app, express) => {
   app.use(limiter); // Apply rate limiter middleware to all requests
   app.use(helmet());
   app.use(morgan("combined")); // Logging middleware for development
-
   app.use(cors()); // Enable CORS for all requests
 
   app.use(express.json()); // Body parsing
@@ -48,6 +48,7 @@ const bootstrap = async (app, express) => {
   app.use("/admin", adminRouter);
   app.use("/jobs", jobsRouter);
   app.use("/chat", chatRouter);
+  app.use("/applications", applicationsRouter);
 
   app.all("*", notFoundHandler);
 

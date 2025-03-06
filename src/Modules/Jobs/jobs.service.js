@@ -317,8 +317,6 @@ export const applyToJob = async (req, res, next) => {
     }
   );
 
-  //  Emit a socket event to notify the HR that a new application has been submitted
-
   //  Create a new job application
   const newApplication = await dbService.create({
     model: ApplicationModel,
@@ -327,6 +325,29 @@ export const applyToJob = async (req, res, next) => {
       jobId,
       userCV: { public_id, secure_url },
     },
+  });
+
+  //  Emit a socket event to notify each HR in the company HRs list
+  //  that a new application has been submitted
+  company?.HRs?.forEach((hr) => {
+    if (hr) {
+      req.app
+        .get("socket")
+        .to(hr)
+        .emit("newApplication", {
+          message: `New Application for ${job.title}`,
+          jobId,
+          userId: req.user._id,
+          companyId: job.companyId,
+        });
+    }
+  });
+
+  req.app.get("socket").emit("newApplication", {
+    message: `A new application has been submitted for job: ${job.title}`,
+    jobId,
+    userId: req.user._id,
+    companyId: job.companyId,
   });
 
   return res.status(200).json({

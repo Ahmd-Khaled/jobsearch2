@@ -81,6 +81,7 @@ export const generalField = {
   technicalSkills: Joi.array(),
   softSkills: Joi.array(),
   status: Joi.string().valid(...Object.values(appsStatus)),
+  date: Joi.date(),
 };
 
 export const validation = (schema) => {

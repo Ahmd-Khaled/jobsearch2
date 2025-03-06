@@ -18,8 +18,9 @@ export const getChatHistory = async (req, res, next) => {
   // Fetch chat history between the two users
   const chatHistory = await dbService.find({
     model: ChatModel,
-    filter: { receiverId: userId },
-    // filter: { $all: [{ senderId: req.user._id }, { receiverId: userId }] },
+    filter: {
+      $or: [{ senderId: userId }, { receiverId: userId }],
+    }, // Filter if the userId is the sender or the receiver to get his history messages
   });
 
   res.status(200).json({
