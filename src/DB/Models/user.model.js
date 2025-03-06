@@ -7,6 +7,10 @@ import {
   typesOfOTP,
 } from "../../utils/variables.js";
 import { decrypt, encrypt } from "../../utils/encryption/encryption.js";
+import { deleteRelatedDocumentsPlugin } from "../../utils/deleteRelatedDocumentsPlugin.js";
+import { ApplicationModel } from "./application.model.js";
+import { ChatModel } from "./chat.model.js";
+import { CompanyModel } from "./company.model.js";
 
 const userSchema = new Schema(
   {
@@ -114,6 +118,15 @@ userSchema.post("init", function (doc) {
       console.error("Decryption failed", err);
     }
   }
+});
+
+userSchema.plugin(deleteRelatedDocumentsPlugin, {
+  relatedModels: [
+    { model: ApplicationModel, field: "userId" },
+    { model: ChatModel, field: "senderId" },
+    { model: ChatModel, field: "receiverId" },
+    { model: CompanyModel, field: "CreatedBy" },
+  ],
 });
 
 export const UserModel = mongoose.model.User || model("User", userSchema);

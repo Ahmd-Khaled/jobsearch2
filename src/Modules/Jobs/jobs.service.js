@@ -145,14 +145,18 @@ export const deleteJob = async (req, res, next) => {
     );
   }
 
-  await dbService.deleteOne({
+  const deleteResponse = await dbService.deleteOne({
     model: JobModel,
     filter: { _id: jobId },
   });
 
+  if (deleteResponse.deletedCount === 0) {
+    return next(new Error("Job not found"));
+  }
+
   return res.status(200).json({
     status: true,
-    message: "Job deleted successfully",
+    message: "Job deleted successfully with all related applications",
   });
 };
 

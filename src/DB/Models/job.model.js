@@ -5,6 +5,8 @@ import {
   seniorityLevels,
   workingTimes,
 } from "../../utils/variables.js";
+import { deleteRelatedDocumentsPlugin } from "../../utils/deleteRelatedDocumentsPlugin.js";
+import { ApplicationModel } from "./application.model.js";
 
 const jobSchema = new Schema(
   {
@@ -67,5 +69,9 @@ jobSchema.query.paginate = async function (page, limit, filter = {}) {
     lastPage: totalPages,
   };
 };
+
+jobSchema.plugin(deleteRelatedDocumentsPlugin, {
+  relatedModels: [{ model: ApplicationModel, field: "jobId" }],
+});
 
 export const JobModel = mongoose.model.Job || model("Job", jobSchema);

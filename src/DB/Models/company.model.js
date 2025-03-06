@@ -4,6 +4,8 @@ import {
   exampleDescription,
   exampleIndustry,
 } from "../../utils/variables.js";
+import { deleteRelatedDocumentsPlugin } from "../../utils/deleteRelatedDocumentsPlugin.js";
+import { JobModel } from "./job.model.js";
 
 const companySchema = new Schema(
   {
@@ -71,6 +73,10 @@ companySchema.query.paginate = async function (page) {
     lastPage: totalPages,
   };
 };
+
+companySchema.plugin(deleteRelatedDocumentsPlugin, {
+  relatedModels: [{ model: JobModel, field: "companyId" }],
+});
 
 export const CompanyModel =
   mongoose.model.Company || model("Company", companySchema);

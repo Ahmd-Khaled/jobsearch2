@@ -1,5 +1,7 @@
 import mongoose, { Schema, Types, model } from "mongoose";
 import { appsStatus } from "../../utils/variables.js";
+import { deleteRelatedDocumentsPlugin } from "../../utils/deleteRelatedDocumentsPlugin.js";
+import { ChatModel } from "./chat.model.js";
 
 const applicationSchema = new Schema(
   {
@@ -40,6 +42,13 @@ applicationSchema.query.paginate = async function (page, limit, filter = {}) {
     lastPage: totalPages,
   };
 };
+
+applicationSchema.plugin(deleteRelatedDocumentsPlugin, {
+  relatedModels: [
+    { model: ChatModel, field: "senderId" },
+    { model: ChatModel, field: "receiverId" },
+  ],
+});
 
 export const ApplicationModel =
   mongoose.model.Application || model("Application", applicationSchema);
