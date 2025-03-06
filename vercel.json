@@ -6,6 +6,12 @@
             "use": "@vercel/node"
         }
     ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "index.js"
+        }
+    ],
     "env": {
         "DB_URI": "mongodb+srv://ahmdkhaldd:7udsvprWZsJVrsM5@cluster0.cwq9q.mongodb.net/jobSearch"
     },
