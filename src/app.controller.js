@@ -34,7 +34,17 @@ const bootstrap = async (app, express) => {
     res.json({ message: "API is working - Vercel Test" });
   });
 
-  app.use("/graphql", createHandler({ schema: schema }));
+  app.use(
+    "/graphql",
+    createHandler({
+      schema: schema,
+      context: async ({ request, raw }) => {
+        const token = raw.headers.authorization;
+        console.log("==== Authorization Header ====>", token);
+        return { token }; //  This will wrap token in { token }
+      },
+    })
+  );
 
   app.use("/auth", authRouter);
   app.use("/user", userRouter);
