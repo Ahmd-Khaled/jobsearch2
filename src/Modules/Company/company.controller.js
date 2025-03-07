@@ -41,6 +41,7 @@ router.patch(
   allowTo([roleTypes.Admin, roleTypes.User]),
   asyncHandler(companyService.softDeleteCompany)
 );
+
 // Search Company by name API
 router.get(
   "/search",

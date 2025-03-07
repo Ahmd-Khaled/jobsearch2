@@ -50,17 +50,17 @@ companySchema.virtual("jobs", {
 });
 
 // Apply pagination
-companySchema.query.paginate = async function (page) {
+companySchema.query.paginate = async function (page, limit, filter = {}) {
   // Pagination logic
-  page = page ? page : 1;
-  page = Number(page);
-  const limit = 2;
+  page = page ? Number(page) : 1;
+  limit = limit ? Number(limit) : 10;
+
   const skip = limit * (page - 1);
 
   // this here (as a query) equal to = await PostModel.find()
   const data = await this.skip(skip).limit(limit);
   // countDocoment work only in the Model but this here act as a query so we will use this.model
-  const items = await this.model.countDocuments();
+  const items = await this.model.countDocuments(filter);
   const totalPages = Math.ceil(items / limit);
   return {
     data,

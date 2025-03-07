@@ -186,6 +186,7 @@ export const searchCompanyByName = async (req, res, next) => {
         select: "firstName lastName email mobileNumber",
       },
     ],
+    page,
   });
 
   if (!searchResults || searchResults.data?.length === 0) {

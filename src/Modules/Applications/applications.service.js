@@ -42,7 +42,7 @@ export const exportCompanyApplications = async (req, res, next) => {
   endDate.setDate(endDate.getDate() + 1);
 
   // Find all applications related to those jobs
-  const applications = await dbService.find({
+  const applications = await dbService.findWithoutPaginate({
     model: ApplicationModel,
     filter: {
       jobId: { $in: jobIds },
@@ -51,7 +51,7 @@ export const exportCompanyApplications = async (req, res, next) => {
     populate: [{ path: "userId" }],
   });
 
-  if (!applications || applications.data?.length === 0) {
+  if (!applications || applications?.length === 0) {
     return next(
       new Error("No applications found for this company and date", {
         cause: 404,
@@ -74,13 +74,15 @@ export const exportCompanyApplications = async (req, res, next) => {
     { header: "CV Link", key: "cvLink", width: 40 },
   ];
 
-  applications.data.forEach((app) => {
+  // console.log("---------------- applications.data:", applications.data);
+
+  applications.forEach((app) => {
     worksheet.addRow({
-      name: app.userId.username,
-      email: app.userId.email,
-      mobileNumber: app.userId.mobileNumber,
-      gender: app.userId.gender,
-      DOB: app.userId.DOB,
+      name: app.userId?.username,
+      email: app.userId?.email,
+      mobileNumber: app.userId?.mobileNumber,
+      gender: app.userId?.gender,
+      DOB: app.userId?.DOB,
       createdAt: app.createdAt.toISOString(),
       status: app.status,
       cvLink: app.userCV.secure_url,
@@ -106,7 +108,7 @@ export const exportCompanyApplications = async (req, res, next) => {
         status: true,
         message: "Applications fetched successfully",
         url: result.secure_url,
-        ...applications,
+        applications,
       });
     }
   );

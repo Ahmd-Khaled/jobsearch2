@@ -475,6 +475,6 @@ export const changeApplicationStatus = async (req, res, next) => {
   await application.save();
   return res.status(200).json({
     status: true,
-    message: `Application status updated successfully (${status})`,
+    message: `Application status updated successfully (${status}) - Mail Sent`,
   });
 };

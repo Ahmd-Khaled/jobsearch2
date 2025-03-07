@@ -213,6 +213,5 @@ export const softDeleteAccount = async (req, res, next) => {
   res.status(200).json({
     status: true,
     message: "User account soft deleted successfully",
-    user,
   });
 };

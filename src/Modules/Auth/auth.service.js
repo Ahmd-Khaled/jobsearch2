@@ -139,6 +139,7 @@ export const signIn = async (req, res, next) => {
   const user = await dbService.findOne({
     model: UserModel,
     filter: { email },
+    select: "-OTP",
   });
   if (!user) {
     return next(new Error("User not found", { cause: 404 }));
@@ -151,13 +152,6 @@ export const signIn = async (req, res, next) => {
   if (!user.isConfirmed) {
     return next(new Error("Email not verified", { cause: 401 }));
   }
-  // Decrypt mobile number
-  const mobileNumber = decrypt({
-    encryptedText: user.mobileNumber,
-    signature: process.env.ENCRYPTION_SECRET,
-  });
-
-  user.mobileNumber = mobileNumber;
 
   return res.status(201).json({
     status: true,
@@ -349,7 +343,7 @@ export const resetPassword = async (req, res, next) => {
 export const refreshToken = async (req, res, next) => {
   return res.status(201).json({
     status: true,
-    message: "User signed in successfully",
+    message: "Tokens refreshed successfully",
     tokens: {
       access_token: access_token(req.user),
       refresh_token: refresh_token(req.user),

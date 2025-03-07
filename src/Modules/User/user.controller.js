@@ -1,11 +1,12 @@
 import { Router } from "express";
 import { asyncHandler } from "../../utils/error_handling/asyncHandler.js";
 import * as userService from "./user.service.js";
-import { authentication } from "../../middlewares/auth.middleware.js";
+import { allowTo, authentication } from "../../middlewares/auth.middleware.js";
 import { validation } from "../../middlewares/validation.middleware.js";
 import * as userValidation from "./user.validation.js";
 import { uploadCloud } from "../../utils/file_uploading/multerCloud.js";
 import { imgTypeCheck } from "../../utils/fileCheck/imgTypeCheck.js";
+import { roleTypes } from "../../utils/variables.js";
 
 const router = Router();
 
@@ -79,6 +80,7 @@ router.post(
   "/soft-delete-account/:userId",
   authentication(),
   validation(userValidation.softDeleteAccountSchema),
+  allowTo([roleTypes.Admin]),
   asyncHandler(userService.softDeleteAccount)
 );
 
