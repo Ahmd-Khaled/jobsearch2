@@ -89,7 +89,7 @@ router.get(
   "/all-users",
   authentication(),
   // validation(userValidation.getAllUsersSchema),
-  allowTo([roleTypes.Admin]),
+  // allowTo([roleTypes.Admin]),
   asyncHandler(userService.getAllUsers)
 );
 

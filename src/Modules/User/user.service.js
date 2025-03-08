@@ -217,11 +217,11 @@ export const softDeleteAccount = async (req, res, next) => {
   });
 };
 
-// Get all users (role=user)
+// Get all users
 export const getAllUsers = async (req, res, next) => {
   const users = await dbService.findWithoutPaginate({
     model: UserModel,
-    filter: { role: roleTypes.User },
+    // filter: { role: roleTypes.User },
     sort: { createdAt: -1 }, // Sort by createdAt in descending order
   });
   if (!users) {
