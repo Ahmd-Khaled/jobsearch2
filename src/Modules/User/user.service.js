@@ -8,6 +8,7 @@ import {
   defaultProfilePic,
   defaultProfilePicPublicId,
   now,
+  roleTypes,
 } from "../../utils/variables.js";
 
 export const updateUser = async (req, res, next) => {
@@ -213,5 +214,23 @@ export const softDeleteAccount = async (req, res, next) => {
   res.status(200).json({
     status: true,
     message: "User account soft deleted successfully",
+  });
+};
+
+// Get all users (role=user)
+export const getAllUsers = async (req, res, next) => {
+  const users = await dbService.findWithoutPaginate({
+    model: UserModel,
+    filter: { role: roleTypes.User },
+    sort: { createdAt: -1 }, // Sort by createdAt in descending order
+  });
+  if (!users) {
+    return res.status(404).json({ message: "No users found" });
+  }
+
+  res.status(200).json({
+    status: true,
+    message: "Users fetched successfully",
+    data: users,
   });
 };

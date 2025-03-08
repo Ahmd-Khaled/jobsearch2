@@ -84,4 +84,13 @@ router.post(
   asyncHandler(userService.softDeleteAccount)
 );
 
+// Get All Users API
+router.get(
+  "/all-users",
+  authentication(),
+  // validation(userValidation.getAllUsersSchema),
+  allowTo([roleTypes.Admin]),
+  asyncHandler(userService.getAllUsers)
+);
+
 export default router;
