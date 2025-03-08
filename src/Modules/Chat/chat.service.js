@@ -21,6 +21,18 @@ export const getChatHistory = async (req, res, next) => {
     filter: {
       $or: [{ senderId: userId }, { receiverId: userId }],
     }, // Filter if the userId is the sender or the receiver to get his history messages
+    // Populate senderId for FrontEnd Request
+    populate: [
+      {
+        path: "messages",
+        populate: [
+          {
+            path: "senderId",
+            select: "profilePic firstName lastName username",
+          },
+        ],
+      },
+    ],
   });
 
   res.status(200).json({
