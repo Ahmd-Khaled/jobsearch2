@@ -11,6 +11,7 @@ export const initializeSocket = (server, app) => {
 
   app.set("socket", io); // Store socket instance in app to use in Notifications
 
+  // Authenticate User before chat
   io.use(socketAuth);
 
   io.on("connection", (socket) => {

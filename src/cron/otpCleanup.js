@@ -12,7 +12,7 @@ cron.schedule(
       ".......................Running CRON job to delete expired OTPs..."
     );
     try {
-      const users = await dbService.find({
+      const users = await dbService.findWithoutPaginate({
         model: UserModel,
         filter: { OTP: { $exists: true, $ne: [] } },
       });
