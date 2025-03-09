@@ -27,6 +27,8 @@ const bootstrap = async (app, express) => {
   app.use(morgan("combined")); // Logging middleware for development
   app.use(cors()); // Enable CORS for all requests
 
+  app.options("*", cors()); //Handle Preflight Requests (for non-simple requests)
+
   app.use(express.json()); // Body parsing
   app.use(express.urlencoded({ extended: true })); // To parse form-data arrays
   // Routes------------------
