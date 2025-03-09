@@ -5,5 +5,12 @@ export const generateToken = ({ payload, signature, options = {} }) => {
 };
 
 export const verifyToken = ({ token, signature, options = {} }) => {
-  return jwt.verify(token, signature, options);
+  try {
+    return jwt.verify(token, signature, options);
+  } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return { expired: true };
+    }
+    throw error;
+  }
 };

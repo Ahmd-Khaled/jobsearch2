@@ -40,6 +40,10 @@ export const decodedToken = async ({
       tokenType === tokenTypes.access ? ACCESS_SIGNATURE : REFRESH_SIGNATURE,
   });
 
+  if (decoded.expired) {
+    return next(new Error("Token expired", { cause: 401 }));
+  }
+
   const user = await dbService.findOne({
     model: UserModel,
     filter: { _id: decoded.id },
