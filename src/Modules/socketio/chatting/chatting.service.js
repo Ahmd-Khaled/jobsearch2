@@ -35,8 +35,8 @@ export const startChat = function (socket, io) {
       // Allow chating by emitting "chatStarted" event to the frontend
       socket.emit("chatStarted", {
         message: "Chat started successfully",
-        senderId: receiverId,
-        receiverId: senderId,
+        senderId: senderId,
+        receiverId: receiverId,
       });
     } catch (error) {
       console.log("Start Chat Error: ", error);
@@ -61,7 +61,8 @@ export const sendMessage = function (socket, io) {
         return socket.emit("error", { message: "Reciver user not found" });
       }
       //   Check if there is chat messages
-      const chat = await dbService.findOne({
+      let chat;
+      chat = await dbService.findOne({
         model: ChatModel,
         filter: {
           $or: [
@@ -70,7 +71,7 @@ export const sendMessage = function (socket, io) {
           ],
         },
       });
-      //   console.log("........................ Chat:", chat);
+      // console.log("........................ Chat:", chat);
       if (!chat) {
         await dbService.create({
           model: ChatModel,
@@ -82,7 +83,7 @@ export const sendMessage = function (socket, io) {
         });
       } else {
         // Find & Update chat messages
-        await dbService.findOneAndUpdate({
+        chat = await dbService.findOneAndUpdate({
           model: ChatModel,
           filter: {
             $or: [
@@ -91,13 +92,18 @@ export const sendMessage = function (socket, io) {
             ],
           },
           data: { $push: { messages: { message, senderId, createdAt: now } } },
+          options: { upsert: true, new: true, returnDocument: "after" }, // Ensures updated chat is returned
         });
       }
 
+      // console.log("*************** Updated Chat:", chat);
+
       // Emitting "receiveMessage" event to the previos created chat room
       // with last message created in the messages list
-      io.to(`${senderId}-${receiverId}`).emit("receiveMessage", {
-        message: chat?.messages[chat?.messages.length - 1],
+      // io.to(`${senderId}-${receiverId}`).emit("receiveMessage", {
+      io.to(senderId).emit("receiveMessage", {
+        message: chat?.messages,
+        // message: chat?.messages[chat?.messages.length - 1],
         senderId,
         receiverId,
       });

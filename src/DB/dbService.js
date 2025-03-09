@@ -88,7 +88,11 @@ export const findOneAndUpdate = async ({
   populate = [],
 }) => {
   const document = await model
-    .findOneAndUpdate(filter, data, options)
+    .findOneAndUpdate(filter, data, {
+      ...options,
+      new: true,
+      returnDocument: "after",
+    })
     .select(select)
     .populate(populate);
   return document;

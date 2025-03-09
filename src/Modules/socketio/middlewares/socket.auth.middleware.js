@@ -2,7 +2,9 @@ import { decodedToken } from "../../../middlewares/auth.middleware.js";
 
 export const socketAuth = async (socket, next) => {
   // If FE used
-  const authorization = socket?.handshake?.authorization?.auth;
+  const authorization = socket?.handshake?.auth?.auth;
+  // console.log(".......... socket?.handshake:", socket?.handshake?.auth?.auth);
+
   // If Postman Socket.io Client used
   // const { authorization } = socket.headers;
   if (!authorization) {
